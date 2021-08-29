@@ -35,7 +35,7 @@ int main() {
 
   // listen for keypresses and display them
   while (1) {
-    char c = "\0";
+    char c = '\0';
     read(STDIN_FILENO, &c, 1);
     if (iscntrl(c)) {
       printf("%d\r\n", c);

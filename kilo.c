@@ -36,7 +36,8 @@ void enableRawMode() {
   raw.c_cc[VMIN] = 0;
   raw.c_cc[VTIME] = 1;
 
-  tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
+    die("tcsetattr");
 }
 
 int main() {
@@ -45,6 +46,8 @@ int main() {
   // listen for keypresses and display them
   while (1) {
     char c = '\0';
+    if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN)
+      die("read");
     read(STDIN_FILENO, &c, 1);
     if (iscntrl(c)) {
       printf("%d\r\n", c);
